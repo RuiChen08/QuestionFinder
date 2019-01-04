@@ -14,7 +14,7 @@ class MainMenu(tk.Menu):
 
         # 初始化Menu
         self.initFileMenu()
-        self.initOperationMenu()
+        self.init_Operation_Menu()
 
     def initFileMenu(self):
         self.add_cascade(labe='文件', menu=self.fileMenu)
@@ -27,21 +27,21 @@ class MainMenu(tk.Menu):
         self.fileMenu.add_separator()
         self.fileMenu.add_command(label='关闭', command=self.save_before_quit)
 
-    def initOperationMenu(self):
+    def init_Operation_Menu(self):
         self.add_cascade(labe='操作', menu=self.operationMenu)
         operation_menu_label = ['搜索', '确认', '剔除']
         for label in operation_menu_label:
             self.operationMenu.add_command(label=label)
 
     def save_before_quit(self):
-        self.my_controller.close_all()
+        self.save_file()
         self.master.quit()
 
     def create_new(self):
-        pass
+        self.save_file()
 
     def open_file(self):
-        pass
+        self.save_file()
 
     def save_file(self):
         self.my_controller.close_all()

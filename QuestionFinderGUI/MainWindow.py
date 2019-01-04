@@ -47,8 +47,9 @@ class MainWindow:
             self.question_widgets.append(QuestionWidget(Frame(left_frame), i, self.number_of_question,
                                                         self.answer_callback, self.my_controller))
 
-    def answer_callback(self, answers):
-        # clean the text box
+    def answer_callback(self, answers, question=None):
+
+        # clean the text box, showing the message "searching for answers now"
         for ans_box in self.answer_widgets:
             ans_box.widget.delete('1.0', 'end')
             ans_box.widget.insert(CURRENT, "请稍等,正在调取答案。。。")
@@ -57,14 +58,24 @@ class MainWindow:
         # Adding into text box
         for i in range(len(self.answer_widgets)):
             ans_box = self.answer_widgets[i]
-            answer = ""
+
+            # Setting the answer
             if i < len(answers):
                 answer = answers[i]
+            else:
+                # set it empty if there is no offered answer
+                answer = ""
 
-            # clean the text box
+            # Deleting the so called 'searching' message
             ans_box.widget.delete('1.0', 'end')
 
-            #
+            # Setting the question for ans_box
+            if question is None:
+                ans_box.question = None
+            else:
+                ans_box.question = question
+
+            # Write the message into text box
             if answer == "":
                 ans_box.widget.insert(CURRENT, "对不起，没有更多答案了")
             else:

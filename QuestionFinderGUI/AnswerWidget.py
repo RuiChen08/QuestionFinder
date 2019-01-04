@@ -19,22 +19,26 @@ class AnswerWidget:
         self.widget = tk.Text(frame, width=width, height=height,
                               background='Gray', wrap='word')
         self.widget.place(x=0, y=0)
-        self.widget.bind("<Control-KeyPress-o>", self.openLink)  # 重搜索的快捷键
+        self.widget.bind("<Control-KeyPress-o>", self.open_Link)  # 重搜索的快捷键
 
         # Setting the link which represent the link to potential answers
         self.link = None
 
+        # which should be the question of current answer
+        self.question = None
+
         # open the link to the web
-        button = tk.Button(frame, text="打开链接", command=self.openLink)
+        button = tk.Button(frame, text="打开链接", command=self.open_Link)
         button.place(x=220, y=120)
 
-        select = tk.Button(frame, text="选择答案", command=self.writeAnswer)
+        select = tk.Button(frame, text="选择答案", command=self.write_Answer)
         select.place(x=280, y=120)
 
-    def openLink(self):
+    def open_Link(self):
         if not (self.link is None):
             webbrowser.get('safari').open(self.link)
 
-    def writeAnswer(self):
-        if not (self.widget.get('1.0', 'end').strip() == "对不起，没有更多答案了"):
-            self.my_controller.write_que_ans("test question", "test answer")
+    def write_Answer(self):
+        answer = self.widget.get('1.0', 'end').strip()
+        if not (answer== "对不起，没有更多答案了"):
+            self.my_controller.write_que_ans("test question", answer)
