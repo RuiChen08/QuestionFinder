@@ -18,7 +18,10 @@ class MainMenu(tk.Menu):
 
     def initFileMenu(self):
         self.add_cascade(labe='文件', menu=self.fileMenu)
+
+        # Create the top line menu with following functions
         file_menu_label = ['新建', '打开', '保存']
+        file_menu_command = [self.create_new, self.open_file, self.save_file]
         for label in file_menu_label:
             self.fileMenu.add_command(label=label)
         self.fileMenu.add_separator()
@@ -33,4 +36,13 @@ class MainMenu(tk.Menu):
     def save_before_quit(self):
         self.my_controller.close_all()
         self.master.quit()
+
+    def create_new(self):
+        pass
+
+    def open_file(self):
+        pass
+
+    def save_file(self):
+        self.my_controller.close_all()
 
