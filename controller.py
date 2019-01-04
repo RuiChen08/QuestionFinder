@@ -15,6 +15,8 @@ def getHashing(string):
 
 class Controller:
 
+    default_message="没有更多问题了"
+
     def __init__(self):
         # Containing the question description, and its index
         self.questions = list()
@@ -27,7 +29,7 @@ class Controller:
     def next_question(self):
         self.index_question += 1
         if len(self.questions) < self.index_question:
-            return "没有更多问题了"
+            return self.default_message
         return self.questions[self.index_question - 1]
 
     def find_answer_for_question_with_baidu(self, que):
@@ -58,6 +60,9 @@ class Controller:
         return self.next_n_answer(question, -5)
 
     def next_n_answer(self, question, n):
+        if (question == self.default_message):
+            return [""] * n
+
         hash_ = getHashing(question)
 
         if not (hash_ in self.Q_to_A.keys()):
