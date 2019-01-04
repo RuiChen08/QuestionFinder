@@ -1,5 +1,4 @@
 import tkinter as tk
-import tkinter.font as tkFont
 
 width = 70
 height = 17
@@ -16,6 +15,7 @@ class QuestionWidget:
         # callback function for displaying answers
         self.callback = callback
         self.my_controller = controller
+
 
         # Place the widgets into frame, and config them
         self.widget = tk.Text(frame, width=width, height=height,

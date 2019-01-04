@@ -1,5 +1,4 @@
 import tkinter as tk
-import tkinter.font as tkFont
 import webbrowser
 
 width = 70
