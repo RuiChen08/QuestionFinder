@@ -112,7 +112,8 @@ def printHelpMessage():
     print(" python controller -u url [-p/ao/so] [args...]")
     print("")
     print("其中选项包括:")
-    print("   -q:<question description>              指定问题")
+    print("   -f/F:<path/to/output/file>             指定输出文件的位置")
+    print("   -q/Q:<question description>            指定问题")
     print("   -u:<url link to answer>                指定用于搜索答案的链接")
     print("   -ao:<path to answer output file>       指定存放答案的文件")
     print("   -so:<path to answer output file>       指定存放搜索结果的文件")
@@ -121,7 +122,13 @@ def printHelpMessage():
 
 # Controlling the flow by user's inputs
 i = 1
-con = Controller()
+
+# if the out file path is specified
+if sys.argv[1] == '-f' or sys.argv[1] == '-F':
+    con = Controller(sys.argv[2])
+else:
+    con = Controller()
+
 GUI = False
 while i < len(sys.argv):
     if sys.argv[i] == '-q' or sys.argv[i] == '-Q':
@@ -130,6 +137,9 @@ while i < len(sys.argv):
         GUI = True
         i -= 1
     elif len(sys.argv) == 1 or sys.argv[1] == '-h':
+        printHelpMessage()
+        exit(0)
+    elif len(sys.argv) == '-f' or sys.argv[1] == '-F':
         printHelpMessage()
         exit(0)
     i += 2
