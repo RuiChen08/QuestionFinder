@@ -17,10 +17,19 @@ class Controller:
 
     default_message="没有更多问题了"
 
-    def __init__(self):
+    def __init__(self, file=None):
         # Containing the question description, and its index
         self.questions = list()
         self.index_question = 0
+
+        if file is None:
+            file = "/Users/Jason/Desktop/output.txt"
+
+        if os.path.exists(file):
+            mode = 'w'
+        else:
+            mode = 'r'
+        self.output_file = open(file, mode)
 
         # Mapping from question to its answer, and its answer's index
         self.Q_to_A = {}
@@ -83,6 +92,13 @@ class Controller:
             answer = None
 
         return answer
+
+    def write_que_ans(self, question, answer):
+        self.output_file.write("问题: " + question + "\n" + "答案: "+ answer + "\n\n\n\n")
+
+    def close_all(self):
+        self.output_file.close()
+
 
 
 '''

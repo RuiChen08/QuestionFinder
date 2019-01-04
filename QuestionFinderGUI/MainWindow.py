@@ -31,7 +31,7 @@ class MainWindow:
         self.root.geometry("1000x800")
 
         # Add the main menu into root window
-        main_menu = MainMenu(self.root)
+        main_menu = MainMenu(self.my_controller, self.root)
         self.root.config(menu=main_menu)
 
         # Create the frames of the main windows, left side for question description, right side for potential answers
@@ -41,7 +41,7 @@ class MainWindow:
         right_frame.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
 
         for i in range(self.number_of_answer):
-            self.answer_widgets.append(AnswerWidget(Frame(right_frame), i, self.number_of_answer))
+            self.answer_widgets.append(AnswerWidget(Frame(right_frame), i, self.number_of_answer, self.my_controller))
 
         for i in range(self.number_of_question):
             self.question_widgets.append(QuestionWidget(Frame(left_frame), i, self.number_of_question,
