@@ -16,6 +16,8 @@ def getHashing(string):
 class Controller:
 
     default_message="没有更多问题了"
+    default_answer=["问题为 \"没有更多问题了\", 此问题是无效问题", "请稍等，正在生成数据", "对不起，没有更多答案了"]
+
 
     def __init__(self, file=None):
         # Containing the question description, and its index
@@ -70,7 +72,7 @@ class Controller:
 
     def next_n_answer(self, question, n):
         if (question == self.default_message):
-            return [""] * n
+            return [self.default_answer[0]] * n  # "问题为 \"没有更多问题了\", 此问题是无效问题"
 
         hash_ = getHashing(question)
 
@@ -78,7 +80,7 @@ class Controller:
             path = "data/" + hash_ + "candidate.csv"
             if not os.path.exists(path):
                 Thread(target=lambda: self.find_answer_for_question_with_baidu(question)).start()
-            return ["请稍等，正在生成数据"] * n
+            return [self.default_answer[1]] * n  #  "请稍等，正在生成数据"
 
         # dynamically change the cursor
         self.Q_to_AI[hash_] += n
@@ -89,12 +91,13 @@ class Controller:
         else:
             if (index + 5 < 0) or (index - 5 > len(self.Q_to_A[hash_])):
                 self.Q_to_AI[hash_] -= n
-            answer = None
+            answer = [self.default_answer[2]] * n  #  "对不起，没有更多答案了"
 
         return answer
 
     def write_que_ans(self, question, answer):
-        self.output_file.write("问题: " + question + "\n" + "答案: "+ answer + "\n\n\n\n")
+        self.output_file.write("问题: " + question + "\n" + "答案: \n"+ answer + "\n\n\n\n\n\n\n")
+        self.output_file.flush()
 
     def close_all(self):
         self.output_file.close()

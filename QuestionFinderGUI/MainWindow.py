@@ -47,7 +47,7 @@ class MainWindow:
             self.question_widgets.append(QuestionWidget(Frame(left_frame), i, self.number_of_question,
                                                         self.answer_callback, self.my_controller))
 
-    def answer_callback(self, answers, question=None):
+    def answer_callback(self, answers, questioner):
 
         # clean the text box, showing the message "searching for answers now"
         for ans_box in self.answer_widgets:
@@ -57,27 +57,22 @@ class MainWindow:
 
         # Adding into text box
         for i in range(len(self.answer_widgets)):
-            ans_box = self.answer_widgets[i]
-
-            # Setting the answer
-            if i < len(answers):
-                answer = answers[i]
-            else:
-                # set it empty if there is no offered answer
-                answer = ""
-
             # Deleting the so called 'searching' message
+            ans_box = self.answer_widgets[i]
             ans_box.widget.delete('1.0', 'end')
 
-            # Setting the question for ans_box
-            if question is None:
-                ans_box.question = None
-            else:
-                ans_box.question = question
+            # set the answer
+            # set it empty if there is no offered answer
+            answer = ""
+            if i < len(answers):
+                answer = answers[i]
+
+            # Setting the questioner for ans_box, which is the QuestionWidget
+            ans_box.questioner = questioner
 
             # Write the message into text box
             if answer == "":
-                ans_box.widget.insert(CURRENT, "对不起，没有更多答案了")
+                ans_box.widget.insert(CURRENT, self.my_controller.default_answer[-1]) # The index -1 will be the default output is none answer is given to the GUI
             else:
                 t_list = answer.split('\t')
                 for a_ in t_list:
@@ -86,14 +81,14 @@ class MainWindow:
                     else:
                         ans_box.widget.insert(CURRENT, a_ + '\n\n')
 
-            # For testing
-            # for name in answer.columns:
-            #     for c in answer.index:
-            #         if name == 'href':
-            #             ans.link = answer[name][c]
-            #         else:
-            #             ans.widget.insert(CURRENT, name + ": " + answer[name][c] + "\n\n")
-            #             ans.widget.update()
+                        # For testing
+                        # for name in answer.columns:
+                        #     for c in answer.index:
+                        #         if name == 'href':
+                        #             ans.link = answer[name][c]
+                        #         else:
+                        #             ans.widget.insert(CURRENT, name + ": " + answer[name][c] + "\n\n")
+                        #             ans.widget.update()
 
     def start(self):
         for que in self.question_widgets:

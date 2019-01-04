@@ -24,8 +24,8 @@ class AnswerWidget:
         # Setting the link which represent the link to potential answers
         self.link = None
 
-        # which should be the question of current answer
-        self.question = None
+        # which should be the questioner of current answer
+        self.questioner = None
 
         # open the link to the web
         button = tk.Button(frame, text="打开链接", command=self.open_Link)
@@ -40,5 +40,6 @@ class AnswerWidget:
 
     def write_Answer(self):
         answer = self.widget.get('1.0', 'end').strip()
-        if not (answer== "对不起，没有更多答案了"):
-            self.my_controller.write_que_ans("test question", answer)
+        if not ((answer in self.my_controller.default_answer) or (self.questioner is None)):
+            self.my_controller.write_que_ans(self.questioner.cur_q, answer + "\nhref: " + self.link)
+            self.questioner.get_next_question()
