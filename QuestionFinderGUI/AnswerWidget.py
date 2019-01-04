@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.font as tkFont
 import webbrowser
 
 width = 70
@@ -13,7 +14,6 @@ class AnswerWidget:
 
         # Setting the controller
         self.my_controller = controller
-
         # set the content and important attributes
 
         self.widget = tk.Text(frame, width=width, height=height,
@@ -32,7 +32,7 @@ class AnswerWidget:
         button.place(x=220, y=120)
 
         select = tk.Button(frame, text="选择答案", command=self.write_Answer)
-        select.place(x=280, y=120)
+        select.place(x=380, y=120)
 
     def open_Link(self):
         if not (self.link is None):
@@ -41,5 +41,5 @@ class AnswerWidget:
     def write_Answer(self):
         answer = self.widget.get('1.0', 'end').strip()
         if not ((answer in self.my_controller.default_answer) or (self.questioner is None)):
-            self.my_controller.write_que_ans(self.questioner.cur_q, answer + "\nhref: " + self.link)
+            self.my_controller.write_que_ans(self.questioner.cur_q, answer, self.link)
             self.questioner.get_next_question()

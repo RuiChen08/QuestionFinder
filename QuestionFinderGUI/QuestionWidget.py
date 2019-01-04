@@ -1,5 +1,5 @@
 import tkinter as tk
-import pandas as pd
+import tkinter.font as tkFont
 
 width = 70
 height = 17

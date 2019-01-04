@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 from threading import Thread
@@ -95,8 +97,18 @@ class Controller:
 
         return answer
 
-    def write_que_ans(self, question, answer):
-        self.output_file.write("问题: " + question + "\n" + "答案: \n"+ answer + "\n\n\n\n\n\n\n")
+    def write_que_ans(self, question, answer, link):
+        # self.output_file.write("<meta http - equiv = \"Content-Type\" content = \"text/html\"; charset=utf-8/>")
+        self.output_file.write('<hr/>')
+        self.output_file.write("<h1>" + question + "</h1>")
+        for _ans in answer.split("\n\n"):
+            index = _ans.find(':')
+            if index == -1:
+                self.output_file.write("<h3>" + _ans[0:] + "</h3>")
+            else:
+                self.output_file.write("<h2>" + _ans[0:index] + "</h2>")
+                self.output_file.write("<h3>" + _ans[index+1:] + "</h3>")
+        self.output_file.write('<a href="%s" target="_blank">答案链接</a>' % link)
         self.output_file.flush()
 
     def close_all(self):
