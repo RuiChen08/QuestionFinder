@@ -23,12 +23,12 @@ class Controller:
         self.index_question = 0
 
         if file is None:
-            file = "/Users/Jason/Desktop/output.txt"
+            file = "output.txt"
 
         if os.path.exists(file):
             mode = 'w'
         else:
-            mode = 'r'
+            mode = 'x'
         self.output_file = open(file, mode)
 
         # Mapping from question to its answer, and its answer's index
