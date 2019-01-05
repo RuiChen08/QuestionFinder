@@ -194,7 +194,6 @@ def printHelpMessage():
 # Controlling the flow by user's inputs
 i = 1
 
-os.system("export TESSDATA_PREFIX=/Users/chenrui/Projects/PyCharmProjects/QuestionFinder/TessOCR/tessdata")
 if not os.path.exists('data'):
     os.mkdir('data')
 
