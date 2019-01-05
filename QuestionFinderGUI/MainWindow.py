@@ -31,7 +31,7 @@ class MainWindow:
         self.root.geometry("1000x800")
 
         # Add the main menu into root window
-        main_menu = MainMenu(self.my_controller, self.root)
+        main_menu = MainMenu(self.my_controller, self.root, self.set_new_questions)
         self.root.config(menu=main_menu)
 
         # Create the frames of the main windows, left side for question description, right side for potential answers
@@ -72,7 +72,7 @@ class MainWindow:
 
             # Write the message into text box
             if answer == "":
-                ans_box.widget.insert(CURRENT, self.my_controller.default_answer[-1]) # The index -1 will be the default output is none answer is given to the GUI
+                ans_box.widget.insert(CURRENT, self.my_controller.default_answer[-1])  # The index -1 will be the default output is none answer is given to the GUI
             else:
                 t_list = answer.split('\t')
                 for a_ in t_list:
@@ -81,16 +81,10 @@ class MainWindow:
                     else:
                         ans_box.widget.insert(CURRENT, a_ + '\n\n')
 
-                        # For testing
-                        # for name in answer.columns:
-                        #     for c in answer.index:
-                        #         if name == 'href':
-                        #             ans.link = answer[name][c]
-                        #         else:
-                        #             ans.widget.insert(CURRENT, name + ": " + answer[name][c] + "\n\n")
-                        #             ans.widget.update()
-
-    def start(self):
+    def set_new_questions(self):
         for que in self.question_widgets:
             que.set_new_question(self.my_controller.next_question())
+
+    def start(self):
+        self.set_new_questions()
         self.root.mainloop()

@@ -16,10 +16,8 @@ def getHashing(string):
 
 
 class Controller:
-
-    default_message="没有更多问题了"
-    default_answer=["问题为 \"没有更多问题了\", 此问题是无效问题", "请稍等，正在生成数据", "对不起，没有更多答案了"]
-
+    default_message = "没有更多问题了"
+    default_answer = ["问题为 \"没有更多问题了\", 此问题是无效问题", "请稍等，正在生成数据", "对不起，没有更多答案了"]
 
     def __init__(self, file=None):
         # Containing the question description, and its index
@@ -27,7 +25,7 @@ class Controller:
         self.index_question = 0
 
         if file is None:
-            file = "output.txt"
+            file = "output.html"
 
         if os.path.exists(file):
             mode = 'w'
@@ -82,18 +80,18 @@ class Controller:
             path = "data/" + hash_ + "candidate.csv"
             if not os.path.exists(path):
                 Thread(target=lambda: self.find_answer_for_question_with_baidu(question)).start()
-            return [self.default_answer[1]] * n  #  "请稍等，正在生成数据"
+            return [self.default_answer[1]] * n  # "请稍等，正在生成数据"
 
         # dynamically change the cursor
         self.Q_to_AI[hash_] += n
 
         index = self.Q_to_AI[hash_]
         if (index >= 0) and (index <= len(self.Q_to_A[hash_])):
-            answer = self.Q_to_A[hash_][index:index+abs(n)]
+            answer = self.Q_to_A[hash_][index:index + abs(n)]
         else:
             if (index + 5 < 0) or (index - 5 > len(self.Q_to_A[hash_])):
                 self.Q_to_AI[hash_] -= n
-            answer = [self.default_answer[2]] * n  #  "对不起，没有更多答案了"
+            answer = [self.default_answer[2]] * n  # "对不起，没有更多答案了"
 
         return answer
 
@@ -107,13 +105,67 @@ class Controller:
                 self.output_file.write("<h3>" + _ans[0:] + "</h3>")
             else:
                 self.output_file.write("<h2>" + _ans[0:index] + "</h2>")
-                self.output_file.write("<h3>" + _ans[index+1:] + "</h3>")
+                self.output_file.write("<h3>" + _ans[index + 1:] + "</h3>")
         self.output_file.write('<a href="%s" target="_blank">答案链接</a>' % link)
         self.output_file.flush()
 
     def close_all(self):
         self.output_file.close()
+        suffix = 1
+        while os.path.exists('data/output%d.txt' % suffix):
+            os.system('rm data/output%d.txt' % suffix)
+            suffix += 1
 
+    def set_question_from_pictures(self, pic_dic):
+        parent = os.listdir(pic_dic)
+
+        suffix = 1
+        for picture in parent:
+            while os.path.exists('data/output%d.txt' % suffix):
+                suffix += 1
+            os.system('tesseract %s data/output%d -l chi-sim' % (os.path.join(pic_dic, picture), suffix))
+            self.smart_modifying('data/output%d.txt' % suffix)
+
+    def get_question_from_file(self):
+        file = open('data/output.txt', 'r')
+
+        self.__init__()
+
+        ques_des = ""
+        for line in file.readlines():
+            line = line.strip()
+            if line != "":
+                ques_des += line
+            else:
+                if ques_des == "":
+                    continue
+                self.questions.append(ques_des.replace(' ', ''))
+                ques_des = ""
+
+        file.close()
+
+    def find_anwers(self):
+        for ques in self.questions:
+            t = Thread(target=self.find_answer_for_question_with_baidu(ques))
+            t.start()
+
+    def smart_modifying(self, path):
+        _file = open(path, 'r')
+        ques = list()
+        que = ""
+        for line in _file.readlines():
+            if line.strip() != "":
+                if line.strip()[0].isdigit():
+                    ques.append(que)
+                    que = ""
+            que += line
+
+        ques.append(que)
+
+        _file.close()
+        _file = open(path, 'w')
+        for que in ques:
+            _file.write(que + "\n")
 
 
 '''
@@ -128,6 +180,7 @@ def printHelpMessage():
     print("")
     print("其中选项包括:")
     print("   -f/F:<path/to/output/file>             指定输出文件的位置")
+    print("   -p/P:<path/to/pictures/directory>      指定输出文件的位置")
     print("   -q/Q:<question description>            指定问题")
     print("   -u:<url link to answer>                指定用于搜索答案的链接")
     print("   -ao:<path to answer output file>       指定存放答案的文件")
@@ -137,6 +190,10 @@ def printHelpMessage():
 
 # Controlling the flow by user's inputs
 i = 1
+
+os.system("export TESSDATA_PREFIX=/Users/chenrui/Projects/PyCharmProjects/QuestionFinder/TessOCR/tessdata")
+if not os.path.exists('data'):
+    os.mkdir('data')
 
 # if the out file path is specified
 if sys.argv[1] == '-f' or sys.argv[1] == '-F':
@@ -151,6 +208,8 @@ while i < len(sys.argv):
     elif sys.argv[i] == '-d' or sys.argv[i] == '-D' or sys.argv[i] == '-display':
         GUI = True
         i -= 1
+    elif sys.argv[i] == '-p' or sys.argv[i] == '-P':
+        con.set_question_from_pictures(sys.argv[i + 1])
     elif len(sys.argv) == 1 or sys.argv[1] == '-h':
         printHelpMessage()
         exit(0)
@@ -159,11 +218,7 @@ while i < len(sys.argv):
         exit(0)
     i += 2
 
-if len(con.questions) != 0:
-    for ques in con.questions:
-        t2 = Thread(target=con.find_answer_for_question_with_baidu, args=(ques,))
-        t2.start()
-    if GUI:
-        MainWindow(con).start()
+if GUI:
+    MainWindow(con).start()
 else:
     printHelpMessage()

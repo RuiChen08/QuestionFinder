@@ -16,7 +16,6 @@ class QuestionWidget:
         self.callback = callback
         self.my_controller = controller
 
-
         # Place the widgets into frame, and config them
         self.widget = tk.Text(frame, width=width, height=height,
                               background='Gray', wrap='word')
