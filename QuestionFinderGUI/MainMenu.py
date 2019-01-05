@@ -85,7 +85,7 @@ class MainMenu(tk.Menu):
 
         self.my_controller.get_question_from_file()
         self.callback()
-        self.find_anwers()
+        self.my_controller.find_anwers()
 
     def open_file(self):
         self.save_file()
