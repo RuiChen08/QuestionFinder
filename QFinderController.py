@@ -25,7 +25,7 @@ class Controller:
         self.index_question = 0
 
         if file is None:
-            file = "output.html"
+            file = os.path.expanduser('~') + "/Desktop/output.html"
 
         if os.path.exists(file):
             mode = 'w'
@@ -102,7 +102,10 @@ class Controller:
         for _ans in answer.split("\n\n"):
             index = _ans.find(':')
             if index == -1:
-                self.output_file.write("<h3>" + _ans[0:] + "</h3>")
+                if _ans.endswith('.png'):
+                    self.output_file.write("<img src=\"" + _ans[0:] + "\" />")
+                else:
+                    self.output_file.write("<h3>" + _ans[0:] + "</h3>")
             else:
                 self.output_file.write("<h2>" + _ans[0:index] + "</h2>")
                 self.output_file.write("<h3>" + _ans[index + 1:] + "</h3>")

@@ -23,7 +23,7 @@ class QuestionWidget:
 
         # place to store the answer
         self.answer = list()
-        self.widget.bind("<Button-1>", lambda e: self.get_next_answers())  # 展示答案的快捷键
+        self.widget.bind("<Button-1>", lambda e: self.displayFive())  # 展示答案的快捷键
         self.widget.bind("<Control-Shift-KeyPress-N>", lambda e: self.get_next_answers())  # 调取下五个答案的快捷键
         self.widget.bind("<Control-Shift-KeyPress-P>", lambda e: self.get_previous_answers())  # 调取之前五个答案的快捷键
         self.widget.bind("<Control-Shift-KeyPress-V>", lambda e: self.get_next_question())  # 重搜索的快捷键
